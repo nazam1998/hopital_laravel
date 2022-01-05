@@ -47,7 +47,7 @@ class ConsultationFactory extends Factory
         // Permet de vérifier si la date de la consultation aléatoire est passée ou non
         // Et si elle est passée, on ne mettra pas le statut planifié :)
         if ($randomDate > Carbon::now()) {
-            $statut_array = [1, 2, 3];
+            $statut_array = [1, 2];
         } else {
             $statut_array = [2, 3, 4];
         }

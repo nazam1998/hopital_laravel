@@ -30,8 +30,8 @@ Route::get('hopital/{id}', function ($id) {
         foreach ($local->consultations as $consultation)
             array_push($consultations, $consultation);
     }
-    $consultations = collect($consultations)->sortBy('date')->all();
-    
+    $consultations = collect($consultations)->sortByDesc('date')->all();
+
     return view('hopital', compact('hopital', 'consultations'));
 })->name('hopital');
 

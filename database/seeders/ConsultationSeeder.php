@@ -17,10 +17,6 @@ class ConsultationSeeder extends Seeder
     {
         Consultation::factory()
             ->count(2000)
-            ->state(new Sequence(
-                ['admin' => 'Y'],
-                ['admin' => 'N'],
-            ))
             ->create();
     }
 }

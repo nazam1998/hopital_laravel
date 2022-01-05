@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Consultation;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class ConsultationSeeder extends Seeder

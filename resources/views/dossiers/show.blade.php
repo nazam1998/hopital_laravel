@@ -27,6 +27,7 @@
             </ul>
         </div>
     </nav>
+
     <h1 class="text-center mt-5">Dossier de {{ $patient->nom . ' ' . $patient->prenom }}</h1>
     <table class="table table-striped table-responsive">
         <tbody>

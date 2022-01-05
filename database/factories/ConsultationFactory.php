@@ -2,11 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Consultation;
 use App\Models\Docteur;
 use App\Models\Local;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class ConsultationFactory extends Factory
 {
@@ -31,34 +33,34 @@ class ConsultationFactory extends Factory
         $endTime = Carbon::createFromFormat('H:i:s', '19:00:00');
 
 
-        do {
-            // Permet de récupérer une date et une heure aléatoire entre les deux dates et les 2 heures
-            $randomDate = $this->faker->dateTimeBetween($startDate, $endDate);
-            $randomTime = $this->faker->dateTimeBetween($startTime, $endTime);
 
-            $patient = Patient::inRandomOrder()->first();
-            $docteur = Docteur::inRandomOrder()->first();
-            // Permet de vérifier que le patient n'a pas de consultation à la date random
-            $isPatientFree = $patient->consultations()->where('date', $randomDate)->first();
-            // Permet de vérifier que le docteur n'a pas de consultation au même moment
-            $isDocteurFree = $docteur->consultations()->where('heure', $randomTime)->where('date', $randomDate)->first();
-        } while ($isPatientFree || $isDocteurFree);
+        // Permet de récupérer une date et une heure aléatoire entre les deux dates et les 2 heures
+        $randomDate = $this->faker->dateTimeBetween($startDate, $endDate);
+        $randomTime = $this->faker->dateTimeBetween($startTime, $endTime);
+
+        // Permet de vérifier que le patient n'a pas de consultation à la date random
+        $patient = Patient::inRandomOrder()->whereDoesntHave('consultations', function ($query) use ($randomDate) {
+            return $query->where('date', $randomDate);
+        })->first();
+        // Permet de vérifier que le docteur n'a pas de consultation au même moment
+        $docteur = Docteur::inRandomOrder()->whereDoesntHave('consultations', function ($query) use ($randomDate, $randomTime) {
+            return $query->where('date', $randomDate)->where('heure', $randomTime);
+        })->first();
 
         // Permet de vérifier si la date de la consultation aléatoire est passée ou non
         // Et si elle est passée, on ne mettra pas le statut planifié :)
         if ($randomDate > Carbon::now()) {
             $statut_array = [1, 2];
         } else {
-            $statut_array = [2, 3, 4];
+            $statut_array = [2, 3, 4, 4, 4, 4];
         }
 
         // Permet de récupérer un statut de consultation aléatoire
         // Avec plus de chance d'avoir un "fait"
-        $i = 0;
-        do {
-            $statut_index = array_rand($statut_array);
-            $i++;
-        } while ($i < 10 && $statut_index != 4);
+
+        $statut_index = array_rand($statut_array);
+
+
         $statut = $statut_array[$statut_index];
 
         return [

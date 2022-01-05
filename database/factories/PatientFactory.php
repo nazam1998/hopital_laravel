@@ -14,6 +14,7 @@ class PatientFactory extends Factory
      */
     public function definition()
     {
+        $this->faker->randomNumber($nbDigits = NULL, $strict = false);
         return [
             'nom' => $this->faker->name(),
             'prenom' => $this->faker->name(),

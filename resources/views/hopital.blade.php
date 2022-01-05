@@ -48,18 +48,25 @@
         <tbody>
             @foreach ($consultations as $consultation)
                 <tr class="py-3">
-                    <th scope="row">{{ $consultation->date . ' ' . $consultation->heure }} </th>
+                    <th scope="row">
+                        {{ Carbon\Carbon::parse($consultation->date)->format('d/m/Y') . ' ' . $consultation->heure }}
+                    </th>
                     <td>{{ $consultation->docteur->nom }}</td>
                     <td>{{ $consultation->local->nom }}</td>
                     <td>{{ $consultation->patient->nom }}</td>
                     <td>{{ $consultation->statut->statut }}</td>
                     <td>@if ($consultation->dossier){{ $consultation->dossier->maladie->nom }}@else/ @endif</td>
-                    <td><a href="{{ route('patient.show', $consultation->patient->registre) }}">Voir détails</a></td>
+                    <td><a href="{{ route('patient.show', $consultation->patient->registre) }}">Voir détails du
+                            patient</a></td>
                 </tr>
 
             @endforeach
         </tbody>
     </table>
+    <div class="text-center mx-auto">
+        {{ $consultations->links() }}
+    </div>
+
 </body>
 
 </html>

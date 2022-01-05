@@ -15,13 +15,13 @@ class LocalFactory extends Factory
      */
     public function definition()
     {
-        do {
-            $hopital = Hopital::inRandomOrder()->first();
-        } while ($hopital->locals()->count() > 80);
+
+        $hopitals = Hopital::inRandomOrder()->withCount('locals')->get();
+        $hopital_id = $hopitals->where('locals_count', '<', 80)->first()->id;
 
         return [
             'nom' => 'local' . rand(0, 300),
-            'hopitals_id' => $hopital->id,
+            'hopitals_id' => $hopital_id,
             'type_locals_id' => TypeLocal::inRandomOrder()->first()
         ];
     }

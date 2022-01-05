@@ -34,7 +34,14 @@
     <h2 class="text-center">Hospitaux</h2>
     <ul class="mx-auto w-50">
         @foreach ($hopitals as $hopital)
-            <h5 class="card p-5"><a class="text-dark" href="{{ route('hopital', $hopital->id) }}">{{ $hopital->nom }}</a></h5>
+            <a class="text-dark" href="{{ route('hopital', $hopital->id) }}">
+                <div class="card p-5">
+                    <h5>
+                        {{ $hopital->nom }}
+                    </h5>
+                    <p class="card-text">{{ $hopital->adresse }}</p>
+                </div>
+            </a>
         @endforeach
     </ul>
 </body>

@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\Docteur;
+use App\Models\Consultation;
 use App\Models\Dossier;
 use App\Models\Hopital;
 use App\Models\Patient;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,51 +21,52 @@ Route::get('/', function () {
     $hopitals = Hopital::all();
     return view('welcome', compact('hopitals'));
 })->name('welcome');
-Route::get('hopital/{id}', function ($id) {
-    $hopital = Hopital::find($id);
-    $locals = $hopital->locals;
-    $consultations = [];
-    foreach ($locals as $local) {
-        foreach ($local->consultations as $consultation)
-            array_push($consultations, $consultation);
-    }
-    $consultations = collect($consultations)->sortByDesc('date')->all();
 
+
+
+
+Route::get('hopital/{id}', function ($id) {
+
+    $hopital = Hopital::find($id);
+    $locals_id = $hopital->locals->pluck('id');
+    $consultations = Consultation::whereIn('locals_id', $locals_id)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->paginate(50);
     return view('hopital', compact('hopital', 'consultations'));
 })->name('hopital');
+
 
 
 Route::get('hopital/{id}/patients', function ($id) {
     $hopital = Hopital::find($id);
     $locals = $hopital->locals;
-    $consultations = [];
     $patients = [];
     foreach ($locals as $local) {
         foreach ($local->consultations as $consultation)
-            array_push($consultations, $consultation);
-            array_push($patients,$consultation->patient);
+            array_push($patients, $consultation->patient);
     }
-    $patients = array_unique($patients);
-    $consultations = collect($consultations)->sortBy('date')->all();
     $patients = collect($patients)->all();
-
     return view('patients.index', compact('patients'));
 })->name('hopital.show');
+
+
 
 Route::get('patients', function () {
     $patients = Patient::all();
     return view('patients.index', compact('patients'));
 })->name('patients');
 
+
+
 Route::get('patient/{id}', function ($id) {
     $patient = Patient::where('registre', $id)->first();
     return view('patients.show', compact('patient'));
 })->name('patient.show');
 
+
 Route::get('patient/{id}/dossier', function ($id) {
     $patient = Patient::where('registre', $id)->first();
     return view('dossiers.index', compact('patient'));
 })->name('dossier.index');
+
 
 
 Route::get('patient/{idPatient}/dossier/{id}', function ($idPatient, $id) {

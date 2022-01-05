@@ -28,11 +28,15 @@ class DossierSeeder extends Seeder
             if ($patient->dossiers()->count() < 5) {
                 $maladie = Maladie::inRandomOrder()->first();
 
+
+                
                 if (!$maladie->curable) {
                     $statut = 4;
                 } else {
                     $statut = StatutDossier::inRandomOrder()->where('id', '!=', 4)->first()->id;
                 }
+
+
                 DB::table('dossiers')->insert([
                     'patients_id' => $patient->registre,
                     'consultations_id' => $consultation->id,

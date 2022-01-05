@@ -2,10 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Consultation;
-use App\Models\Maladie;
-use App\Models\Patient;
-use App\Models\StatutDossier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DossierFactory extends Factory
@@ -18,6 +14,5 @@ class DossierFactory extends Factory
     public function definition()
     {
 
-        
     }
 }

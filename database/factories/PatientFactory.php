@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Provider\Address;
+
 class PatientFactory extends Factory
 {
     /**

@@ -18,10 +18,12 @@ class DatabaseSeeder extends Seeder
             TypeLocalSeeder::class,
             LocalSeeder::class,
             DocteurSeeder::class,
+            StatutConsultationSeeder::class,
+            StatutDossierSeeder::class,
             PatientSeeder::class,
             MaladieSeeder::class,
-            StatutConsultationSeeder::class,
             ConsultationSeeder::class,
+            DossierSeeder::class,
         ]);
     }
 }

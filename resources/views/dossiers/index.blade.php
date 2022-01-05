@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $hopital->nom }}</title>
+    <title>{{ $patient->nom . ' ' . $patient->prenom }}</title>
     <link rel="stylesheet" href="{{ @asset('css/app.css') }}">
 </head>
 
@@ -28,33 +28,25 @@
             </ul>
         </div>
     </nav>
-    <h2 class="text-center">{{ $hopital->nom }}</h2>
-    <div class="text-center my-5">
-        <a href="{{ route('hopital.show', $hopital->id) }}" class="text-dark mx-auto">Voir tous les
-            patients</a>
-    </div>
+    <h1 class="text-center mt-5">Dossier de {{ $patient->nom . ' ' . $patient->prenom }}</h1>
+
     <table class="table table-responsive table-striped rounded">
         <thead>
             <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Nom Docteur</th>
-                <th scope="col">local</th>
-                <th scope="col">Nom Patient</th>
-                <th scope="col">Statut Consultation</th>
-                <th scope="col">Maladie</th>
-                <th scope="col"></th>
+                <th>Numéro de dossier</th>
+                <th>Maladie</th>
+                <th>Statut du Dossier</th>
+
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($consultations as $consultation)
+            @foreach ($patient->dossiers as $dossier)
                 <tr class="py-3">
-                    <th scope="row">{{ $consultation->date . ' ' . $consultation->heure }} </th>
-                    <td>{{ $consultation->docteur->nom }}</td>
-                    <td>{{ $consultation->local->nom }}</td>
-                    <td>{{ $consultation->patient->nom }}</td>
-                    <td>{{ $consultation->statut->statut }}</td>
-                    <td>@if ($consultation->dossier){{ $consultation->dossier->maladie->nom }}@else/ @endif</td>
-                    <td><a href="{{ route('patient.show', $consultation->patient->registre) }}">Voir détails</a></td>
+                    <th scope="row">{{ $dossier->id }}</th>
+                    <td>{{ $dossier->maladie->nom }}</td>
+                    <td>{{ $dossier->statut->nom }}</td>
+                    <td><a href="{{ route('dossier.show', [$patient->registre, $dossier->id]) }}">Voir détails</a></td>
                 </tr>
 
             @endforeach

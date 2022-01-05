@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $hopital->nom }}</title>
+    <title>Liste des patients</title>
     <link rel="stylesheet" href="{{ @asset('css/app.css') }}">
 </head>
 
@@ -28,33 +28,25 @@
             </ul>
         </div>
     </nav>
-    <h2 class="text-center">{{ $hopital->nom }}</h2>
-    <div class="text-center my-5">
-        <a href="{{ route('hopital.show', $hopital->id) }}" class="text-dark mx-auto">Voir tous les
-            patients</a>
-    </div>
+    <h2 class="text-center">Liste des Patients</h2>
     <table class="table table-responsive table-striped rounded">
         <thead>
             <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Nom Docteur</th>
-                <th scope="col">local</th>
-                <th scope="col">Nom Patient</th>
-                <th scope="col">Statut Consultation</th>
-                <th scope="col">Maladie</th>
+                <th scope="col">Registre</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Date de naissance</th>
                 <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($consultations as $consultation)
+            @foreach ($patients as $patient)
                 <tr class="py-3">
-                    <th scope="row">{{ $consultation->date . ' ' . $consultation->heure }} </th>
-                    <td>{{ $consultation->docteur->nom }}</td>
-                    <td>{{ $consultation->local->nom }}</td>
-                    <td>{{ $consultation->patient->nom }}</td>
-                    <td>{{ $consultation->statut->statut }}</td>
-                    <td>@if ($consultation->dossier){{ $consultation->dossier->maladie->nom }}@else/ @endif</td>
-                    <td><a href="{{ route('patient.show', $consultation->patient->registre) }}">Voir détails</a></td>
+                    <th scope="row">{{ $patient->registre }}</th>
+                    <td>{{ $patient->nom }}</td>
+                    <td>{{ $patient->prenom }}</td>
+                    <td>{{ Carbon\Carbon::parse($patient->date_naissance)->format('d/m/Y') }}</td>
+                    <td><a href="{{ route('patient.show', $patient->registre) }}">Voir détails du patient</a></td>
                 </tr>
 
             @endforeach

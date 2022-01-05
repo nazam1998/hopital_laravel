@@ -11,6 +11,11 @@ class Patient extends Model
 
     public function consultations()
     {
-        return $this->hasMany(Consultation::class, 'patients_id');
+        return $this->hasMany(Consultation::class, 'patients_id', 'registre');
+    }
+
+    public function dossiers()
+    {
+        return $this->hasMany(Dossier::class, 'patients_id', 'registre');
     }
 }

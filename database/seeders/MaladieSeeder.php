@@ -38,7 +38,7 @@ class MaladieSeeder extends Seeder
             [
                 'nom' => 'Ampoule',
                 'curable' => true,
-                'traitement' => '',
+                'traitement' => 'Eteindre la lumière',
             ],
             [
                 'nom' => 'Amygdales',
@@ -53,7 +53,7 @@ class MaladieSeeder extends Seeder
             [
                 'nom' => 'anémie',
                 'curable' => true,
-                'traitement' => '',
+                'traitement' => 'Injection intramusculaires',
             ],
             [
                 'nom' => 'asthme',
@@ -88,7 +88,7 @@ class MaladieSeeder extends Seeder
             [
                 'nom' => 'cauchemars',
                 'curable' => false,
-                'traitement' => 'meditation',
+                'traitement' => '',
             ],
             [
                 'nom' => 'chlamydia',
@@ -108,7 +108,7 @@ class MaladieSeeder extends Seeder
             [
                 'nom' => 'diabète',
                 'curable' => false,
-                'traitement' => 'piquure',
+                'traitement' => '',
             ],
             [
                 'nom' => 'diarrhé',
@@ -163,7 +163,7 @@ class MaladieSeeder extends Seeder
             [
                 'nom' => 'hépatite B',
                 'curable' => true,
-                'traitement' => '',
+                'traitement' => 'Manger peu gras',
             ],
         ]);
     }

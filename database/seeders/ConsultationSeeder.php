@@ -15,7 +15,7 @@ class ConsultationSeeder extends Seeder
     public function run()
     {
         Consultation::factory()
-            ->count(50)
+            ->count(2000)
             ->create();
     }
 }

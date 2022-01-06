@@ -12,6 +12,10 @@ class Local extends Model
     {
         return $this->belongsTo(Hopital::class, 'hopitals_id');
     }
+    function type()
+    {
+        return $this->belongsTo(TypeLocal::class, 'type_locals_id');
+    }
 
     function consultations()
     {

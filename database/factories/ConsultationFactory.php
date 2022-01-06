@@ -46,8 +46,9 @@ class ConsultationFactory extends Factory
             return $query->where('date', $randomDate)->where('heure', $randomTime);
         })->first();
 
-
+        // Permet de regrouper l'heure et la date dans une seule variable
         $randomDateTime = Carbon::parse($randomDate, $randomTime)->format('Y-m-d H:i:s');
+
         // Permet de vérifier si la date de la consultation aléatoire est passée ou non
         // Et si elle est passée, on ne mettra pas le statut planifié :)
         if ($randomDateTime > Carbon::now()) {

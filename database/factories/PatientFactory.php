@@ -16,8 +16,8 @@ class PatientFactory extends Factory
     {
         $this->faker->randomNumber($nbDigits = NULL, $strict = false);
         return [
-            'nom' => $this->faker->name(),
-            'prenom' => $this->faker->name(),
+            'nom' => $this->faker->firstName(),
+            'prenom' => $this->faker->lastName(),
             'date_naissance' => $this->faker->dateTimeBetween('1990-01-01', '2012-12-31'),
             'registre' => $this->faker->rrn(),
             'adresse' => $this->faker->streetAddress(),

@@ -4,6 +4,8 @@ use App\Models\Consultation;
 use App\Models\Dossier;
 use App\Models\Hopital;
 use App\Models\Patient;
+use App\Models\StatutConsultation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,10 +32,37 @@ Route::get('hopital/{id}', function ($id) {
     $hopital = Hopital::find($id);
     $locals_id = $hopital->locals->pluck('id');
     $consultations = Consultation::whereIn('locals_id', $locals_id)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->paginate(50);
-    return view('hopital', compact('hopital', 'consultations'));
+    $docteurs = [];
+    $patients = [];
+    $dossiers = [];
+    $maladies = [];
+    $status = [];
+    $locals = [];
+    foreach ($consultations as $consultation) {
+        array_push($patients, $consultation->patient);
+        array_push($locals, $consultation->local);
+        array_push($docteurs, $consultation->docteur);
+        array_push($status, StatutConsultation::find($consultation->statut_consultations_id));
+        if ($consultation->dossier) {
+            array_push($maladies, $consultation->dossier->maladie);
+            array_push($dossiers, $consultation->dossier);
+        } else {
+            array_push($dossiers, false);
+            array_push($maladies, false);
+        }
+    }
+
+    return view('hopital', compact('hopital', 'consultations', 'docteurs', 'maladies', 'patients', 'locals', 'dossiers','status'));
 })->name('hopital');
 
+Route::get('hopital/{id}/consultations/patient', function (Request $request, $id) {
+    $hopital = Hopital::find($id);
+    $locals_id = $hopital->locals->pluck('id');
+    $patient = Patient::where('nom', 'LIKE', '%' . $request->nom . '%')->orWhere('prenom', 'LIKE', '%' . $request->nom . '%')->first();
 
+    $consultations = Consultation::whereIn('locals_id', $locals_id)->where('patients_id', $patient->registre)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->paginate(50);
+    return view('hopital', compact('hopital', 'consultations'));
+})->name('patient.consultation');
 
 Route::get('hopital/{id}/patients', function ($id) {
     $hopital = Hopital::find($id);

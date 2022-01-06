@@ -28,7 +28,7 @@
             </ul>
         </div>
     </nav>
-    <h1 class="text-center mt-5">Dossier de {{ $patient->nom . ' ' . $patient->prenom }}</h1>
+    <h1 class="text-center mt-5">Détails de {{ $patient->nom . ' ' . $patient->prenom }}</h1>
     @if ($patient->dossiers()->count() > 0)
         <div class="text-center my-4">
             <a href="{{ route('dossier.index', $patient->registre) }}">Voir Dossiers</a>

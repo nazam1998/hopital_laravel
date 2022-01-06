@@ -13,6 +13,7 @@ use Illuminate\Database\Seeder;
 
 class ConsultationSeeder extends Seeder
 {
+    // Variable globale qui servira à mettre l'état d'une consulation sur fait 3 fois sur 4
     protected $count;
     /**
      * Run the database seeds.
@@ -64,21 +65,22 @@ class ConsultationSeeder extends Seeder
             return $query->where('date', $randomDate)->where('heure', $randomTime);
         })->first();
 
+
+        $randomDateTime = Carbon::parse($randomDate, $randomTime)->format('Y-m-d H:i:s');
         // Permet de vérifier si la date de la consultation aléatoire est passée ou non
         // Et si elle est passée, on ne mettra pas le statut planifié :)
-        $randomDateTime = Carbon::parse($randomDate, $randomTime)->format('Y-m-d H:i:s');
-
         if ($randomDateTime > Carbon::now()) {
             $statut_array = [1, 2];
         } else {
+            // Si la date est passée, on incrément le compteur
             $this->count++;
-
-            // Avec plus de chance d'avoir un "fait"
+            // Si on est à moins de 3 fois sur 4, on met l'état de la consulation sur fait
+            // Sinon, on met une donnée aléatoire autre que fait
             if ($this->count % 4 <= 2) {
 
                 $statut_array = [4];
             } else {
-                $statut_array = [2, 3, 4];
+                $statut_array = [2, 3];
             }
         }
 

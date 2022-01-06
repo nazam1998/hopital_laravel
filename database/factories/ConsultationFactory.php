@@ -19,58 +19,5 @@ class ConsultationFactory extends Factory
      */
     public function definition()
     {
-
-        // Permet de générer une variable qui va nous permettre de récupérer la date de début
-        $startDate = Carbon::createFromFormat('Y/m/d', '2021/06/01');
-
-        // Permet de générer une variable qui va nous permettre de récupérer la date limite
-        $endDate = Carbon::createFromFormat('Y/m/d', '2022/01/31');
-
-        // Permet de générer une variable qui va nous permettre de récupérer l'heure d'ouverture
-        $startTime = Carbon::createFromFormat('H:i:s', '8:00:00');
-
-        // Permet de générer une variable qui va nous permettre de récupérer l'heure de fin
-        $endTime = Carbon::createFromFormat('H:i:s', '19:00:00');
-
-
-
-        // Permet de récupérer une date et une heure aléatoire entre les deux dates et les 2 heures
-        $randomDate = $this->faker->dateTimeBetween($startDate, $endDate);
-        $randomTime = $this->faker->dateTimeBetween($startTime, $endTime);
-
-        // Permet de vérifier que le patient n'a pas de consultation à la date random
-        $patient = Patient::inRandomOrder()->whereDoesntHave('consultations', function ($query) use ($randomDate) {
-            return $query->where('date', $randomDate);
-        })->first();
-        // Permet de vérifier que le docteur n'a pas de consultation au même moment
-        $docteur = Docteur::inRandomOrder()->whereDoesntHave('consultations', function ($query) use ($randomDate, $randomTime) {
-            return $query->where('date', $randomDate)->where('heure', $randomTime);
-        })->first();
-
-        // Permet de vérifier si la date de la consultation aléatoire est passée ou non
-        // Et si elle est passée, on ne mettra pas le statut planifié :)
-        if ($randomDate > Carbon::now()) {
-            $statut_array = [1, 2];
-        } else {
-            $statut_array = [2, 3, 4, 4, 4, 4];
-        }
-
-        // Permet de récupérer un statut de consultation aléatoire
-        // Avec plus de chance d'avoir un "fait"
-
-        $statut_index = array_rand($statut_array);
-
-
-        $statut = $statut_array[$statut_index];
-
-        return [
-            'date' => Carbon::parse($randomDate)->format('Y-m-d'),
-            'heure' => Carbon::parse($randomTime)->format('H:i:s'),
-            'patients_id' => $patient->registre,
-            'docteurs_id' => $docteur->id,
-            'locals_id' => Local::inRandomOrder()->first()->id,
-            'statut_consultations_id' => $statut
-
-        ];
     }
 }

@@ -1,8 +1,12 @@
 <?php
 
+use App\Helpers\PaginationHelper;
 use App\Models\Consultation;
+use App\Models\Docteur;
 use App\Models\Dossier;
 use App\Models\Hopital;
+use App\Models\Local;
+use App\Models\Maladie;
 use App\Models\Patient;
 use App\Models\StatutConsultation;
 use Illuminate\Http\Request;
@@ -31,36 +35,73 @@ Route::get('hopital/{id}', function ($id) {
 
     $hopital = Hopital::find($id);
     $locals_id = $hopital->locals->pluck('id');
-    $consultations = Consultation::whereIn('locals_id', $locals_id)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->paginate(50);
-    $docteurs = [];
-    $patients = [];
-    $dossiers = [];
-    $maladies = [];
-    $status = [];
-    $locals = [];
-    foreach ($consultations as $consultation) {
-        array_push($patients, $consultation->patient);
-        array_push($locals, $consultation->local);
-        array_push($docteurs, $consultation->docteur);
-        array_push($status, StatutConsultation::find($consultation->statut_consultations_id));
-        if ($consultation->dossier) {
-            array_push($maladies, $consultation->dossier->maladie);
-            array_push($dossiers, $consultation->dossier);
-        } else {
-            array_push($dossiers, false);
-            array_push($maladies, false);
-        }
-    }
+    $consultations = Consultation::whereIn('locals_id', $locals_id)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->get();
+    $datas = [];
 
-    return view('hopital', compact('hopital', 'consultations', 'docteurs', 'maladies', 'patients', 'locals', 'dossiers','status'));
+    foreach ($consultations as $consultation) {
+        $patient = Patient::where('registre', $consultation->patients_id)->first();
+        $local = Local::where('id', $consultation->locals_id)->first();
+        $docteur = Docteur::where('id', $consultation->docteurs_id)->first();
+        $status = StatutConsultation::where('id', $consultation->statut_consultations_id)->first();
+        $dossier = Dossier::where('consultations_id', $consultation->id)->first();
+        if ($dossier != null) {
+            $maladie = Maladie::where('id', $dossier->maladies_id)->first();
+        } else {
+            $maladie = null;
+        }
+        $myData = [
+            'consultation' => $consultation,
+            'patient' => $patient,
+            'local' => $local,
+            'docteur' => $docteur,
+            'status' => $status,
+            'dossier' => $dossier,
+            'maladie' => $maladie,
+        ];
+        array_push($datas, (object)($myData));
+    }
+    $showPerPage = 20;
+
+    $consultations = collect($datas);
+    $consultations = PaginationHelper::paginate($consultations, $showPerPage);
+    // dd($consultations[0]->docteur);
+    return view('hopital', compact('hopital', 'consultations'));
 })->name('hopital');
 
 Route::get('hopital/{id}/consultations/patient', function (Request $request, $id) {
     $hopital = Hopital::find($id);
     $locals_id = $hopital->locals->pluck('id');
-    $patient = Patient::where('nom', 'LIKE', '%' . $request->nom . '%')->orWhere('prenom', 'LIKE', '%' . $request->nom . '%')->first();
+    $patients = Patient::where('nom', 'LIKE', '%' . $request->nom . '%')->orWhere('prenom', 'LIKE', '%' . $request->nom . '%')->get();
+    // dd($patients->pluck('registre'));
+    $consultations = Consultation::whereIn('locals_id', $locals_id)->whereIn('patients_id', $patients->pluck('registre'))->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->get();
+    $datas = [];
 
-    $consultations = Consultation::whereIn('locals_id', $locals_id)->where('patients_id', $patient->registre)->orderBy('date', 'DESC')->orderBy('heure', 'DESC')->paginate(50);
+    foreach ($consultations as $consultation) {
+        $patient = Patient::where('registre', $consultation->patients_id)->first();
+        $local = Local::where('id', $consultation->locals_id)->first();
+        $docteur = Docteur::where('id', $consultation->docteurs_id)->first();
+        $status = StatutConsultation::where('id', $consultation->statut_consultations_id)->first();
+        $dossier = Dossier::where('consultations_id', $consultation->id)->first();
+        if ($dossier != null) {
+            $maladie = Maladie::where('id', $dossier->maladies_id)->first();
+        } else {
+            $maladie = null;
+        }
+        $myData = [
+            'consultation' => $consultation,
+            'patient' => $patient,
+            'local' => $local,
+            'docteur' => $docteur,
+            'status' => $status,
+            'dossier' => $dossier,
+            'maladie' => $maladie,
+        ];
+        array_push($datas, (object)($myData));
+    }
+    $showPerPage = 20;
+
+    $consultations = collect($datas);
+    $consultations = PaginationHelper::paginate($consultations, $showPerPage);
     return view('hopital', compact('hopital', 'consultations'));
 })->name('patient.consultation');
 

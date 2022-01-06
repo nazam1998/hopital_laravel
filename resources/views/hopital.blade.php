@@ -33,12 +33,12 @@
         <a href="{{ route('hopital.show', $hopital->id) }}" class="text-dark mx-auto">Voir tous les patients</a>
     </div>
     {{-- Input Search --}}
-    {{-- <div class=" w-25 my-5 mx-auto">
+    <div class=" w-25 my-5 mx-auto">
         <form action="{{ route('patient.consultation', [$hopital->id]) }}" action="GET">
             <input class="border px-4 py-1" type="text" placeholder="Search" name="nom" aria-label="Search">
             <button class="btn" type="submit">Search</button>
         </form>
-    </div> --}}
+    </div>
 
 
     <table class="table table-responsive table-striped rounded">
@@ -54,21 +54,21 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($consultations as $consultation)
+            @foreach ($consultations as $data)
                 <tr class="py-3">
                     <th scope="row">
-                        {{ Carbon\Carbon::parse($consultation->date)->format('d/m/Y') . ' ' . $consultation->heure }}
+                        {{ Carbon\Carbon::parse($data->consultation->date)->format('d/m/Y') . ' ' . $data->consultation->heure }}
                     </th>
-                    <td>{{ $docteurs[$loop->index]->nom }}</td>
-                    <td>{{ $locals[$loop->index]->nom }}</td>
-                    <td>{{ $patients[$loop->index]->nom }}</td>
-                    <td>{{ $status[$loop->index]->statut }}</td>
-                    <td>@if ($maladies[$loop->index]){{ $maladies[$loop->index]->nom }}@else/ @endif</td>
-                    <td><a href="{{ route('patient.show', $patients[$loop->index]->registre) }}">Voir détails du
+                    <td>{{ $data->docteur->nom }}</td>
+                    <td>{{ $data->local->nom }}</td>
+                    <td>{{ $data->patient->nom . ' ' . $data->patient->prenom }}</td>
+                    <td>{{ $data->status->statut }}</td>
+                    <td>@if ($data->maladie){{ $data->maladie->nom }}@else/ @endif</td>
+                    <td><a href="{{ route('patient.show', $data->patient->registre) }}">Voir détails du
                             patient</a>
-                        @if ($maladies[$loop->index])
+                        @if ($data->maladie)
                             <a class="mx-3"
-                                href="{{ route('dossier.show', [$patients[$loop->index]->registre, $dossiers[$loop->index]->id]) }}">Voir
+                                href="{{ route('dossier.show', [$data->patient->registre, $data->dossier->id]) }}">Voir
                                 détails du
                                 dossier</a>
                         @endif

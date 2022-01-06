@@ -57,7 +57,15 @@
                     <td>{{ $consultation->statut->statut }}</td>
                     <td>@if ($consultation->dossier){{ $consultation->dossier->maladie->nom }}@else/ @endif</td>
                     <td><a href="{{ route('patient.show', $consultation->patient->registre) }}">Voir détails du
-                            patient</a></td>
+                            patient</a>
+                        @if ($consultation->dossier)
+                            <a
+                            class="mx-3"
+                                href="{{ route('dossier.show', [$consultation->patient->registre, $consultation->dossier->id]) }}">Voir
+                                détails du
+                                dossier</a>
+                        @endif
+                    </td>
                 </tr>
 
             @endforeach

@@ -52,6 +52,9 @@
             @endforeach
         </tbody>
     </table>
+    <div class="mx-auto text-center">
+        {{$patients->links()}}
+    </div>
 </body>
 
 </html>

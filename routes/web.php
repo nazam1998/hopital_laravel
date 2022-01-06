@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ConsultationsHelper;
+use App\Helpers\PaginationHelper;
 use App\Models\Consultation;
 use App\Models\Dossier;
 use App\Models\Hopital;
@@ -54,14 +55,17 @@ Route::get('hopital/{id}/patients', function ($id) {
         foreach ($local->consultations as $consultation)
             array_push($patients, $consultation->patient);
     }
-    $patients = collect($patients)->all();
+    $patients = collect($patients);
+    $showPerPage = 20;
+    $patients = PaginationHelper::paginate($patients, $showPerPage);
     return view('patients.index', compact('patients'));
 })->name('hopital.show');
 
 
 
 Route::get('patients', function () {
-    $patients = Patient::all();
+    $patients = Patient::paginate(20);
+
     return view('patients.index', compact('patients'));
 })->name('patients');
 

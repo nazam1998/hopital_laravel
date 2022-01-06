@@ -29,14 +29,14 @@
         </div>
     </nav>
     <h2 class="text-center">{{ $hopital->nom }}</h2>
-    <div class="text-center my-5">
+    <div class="text-center my-3">
         <a href="{{ route('hopital.show', $hopital->id) }}" class="text-dark mx-auto">Voir tous les patients</a>
     </div>
     {{-- Input Search --}}
-    <div class=" w-25 my-5 mx-auto">
-        <form action="{{ route('patient.consultation', [$hopital->id]) }}" action="GET">
-            <input class="border px-4 py-1" type="text" placeholder="Search" name="nom" aria-label="Search">
-            <button class="btn" type="submit">Search</button>
+    <div class=" w-25 my-4 mx-auto">
+        <form action="{{ route('patient.consultation', [$hopital->id]) }}" action="GET" class="row justify-content-between">
+            <input class="border px-4 py-1 mr-5" type="text" placeholder="Search" name="nom" aria-label="Search">
+            <button class="btn btn-dark mt-2 col-4 mx-auto" type="submit">Search</button>
         </form>
     </div>
 
